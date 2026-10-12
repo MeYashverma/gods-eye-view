@@ -1,0 +1,74 @@
+name: Build and deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# One deployment at a time; a superseded run is cancelled rather than queued.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` is reproducible: it installs exactly what package-lock.json
+      # pins and fails if the lockfile is out of sync with package.json.
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build for GitHub Pages
+        run: npm run build
+        env:
+          # Derives `base` from the repository name so a fork deploys correctly
+          # under its own subpath without editing vite.config.js.
+          REPO_NAME: ${{ github.repository }}
+
+      # Verifies the emitted site: base paths, Cesium static assets, no
+      # credentials in the bundle, no Node-only imports, size budget.
+      - name: Check the built site
+        run: npm run check:build
+        env:
+          REPO_NAME: ${{ github.repository }}
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

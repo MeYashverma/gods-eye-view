@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#07090c" />
+    <meta
+      name="description"
+      content="God's Eye View — an independent, static-hostable real-time 3D Earth intelligence console built on CesiumJS."
+    />
+    <title>God's Eye View — 3D Earth Intelligence Console</title>
+    <link rel="icon" type="image/svg+xml" href="./logo.svg" />
+    <link rel="apple-touch-icon" href="./logo.svg" />
+
+    <!--
+      Cesium resolves its workers, imagery approximations and widget CSS through
+      the `CESIUM_BASE_URL` global. This classic (non-module) script runs before
+      the application bundle and is deliberately NOT inline, so the page keeps
+      working under a Content-Security-Policy without `script-src 'unsafe-inline'`.
+      `scripts/cesium-static.mjs` regenerates it in `dist/` from the resolved
+      Vite `base`, so the path always matches the deployment subpath.
+    -->
+    <script src="./cesium-base.js"></script>
+
+    <link rel="stylesheet" href="./src/styles/app.css" />
+  </head>
+  <body>
+    <div id="app" class="gev-app">
+      <div id="cesium-container" class="gev-globe" aria-label="Interactive 3D Earth globe" role="application"></div>
+
+      <noscript>
+        <div class="gev-noscript">
+          <h1>God's Eye View</h1>
+          <p>This console requires JavaScript and a WebGL-capable browser.</p>
+        </div>
+      </noscript>
+
+      <!-- Boot screen: replaced by the shell once the viewer is live. -->
+      <div id="boot" class="gev-boot" role="status" aria-live="polite">
+        <div class="gev-boot__mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="54" height="54">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1.1" opacity="0.55" />
+            <circle cx="24" cy="24" r="14" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.4" />
+            <ellipse cx="24" cy="24" rx="21" ry="8" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.45" />
+            <ellipse cx="24" cy="24" rx="8" ry="21" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.45" />
+            <circle cx="24" cy="24" r="3.4" fill="currentColor" />
+          </svg>
+        </div>
+        <div class="gev-boot__title">GOD'S EYE VIEW</div>
+        <div class="gev-boot__status" id="boot-status">Initialising globe engine…</div>
+        <div class="gev-boot__bar"><span id="boot-bar"></span></div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

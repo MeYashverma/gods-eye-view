@@ -1,0 +1,840 @@
+/* ============================================================================
+   Console layout — top status bar, left layer rail, right context panel,
+   bottom telemetry strip, floating tool clusters. Responsive collapse below.
+   ========================================================================== */
+
+.gev-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--top-h);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  background: linear-gradient(180deg, rgba(8, 11, 15, 0.96), rgba(8, 11, 15, 0.82));
+  border-bottom: 1px solid var(--l-1);
+  backdrop-filter: blur(8px);
+}
+
+.gev-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  color: var(--info);
+}
+
+.gev-topbar__name {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  color: var(--t-0);
+  white-space: nowrap;
+}
+
+.gev-topbar__sub {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  color: var(--t-3);
+  border-left: 1px solid var(--l-1);
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+.gev-topbar__spacer {
+  flex: 1 1 auto;
+}
+
+.gev-topbar__clock {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--t-1);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  align-items: flex-end;
+}
+
+.gev-topbar__clock small {
+  font-size: 8px;
+  color: var(--t-3);
+  letter-spacing: 0.1em;
+}
+
+/* ------------------------------ left rail ------------------------------- */
+
+#panel-layers {
+  top: calc(var(--top-h) + 8px);
+  left: 8px;
+  bottom: calc(var(--tele-h) + 8px);
+  width: var(--rail-w);
+}
+
+.layer-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--l-0);
+}
+
+.layer-search .input {
+  font-size: 11px;
+}
+
+.layer-group__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.022);
+  border: 0;
+  border-top: 1px solid var(--l-0);
+  color: var(--t-2);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+
+.layer-group__head:hover {
+  color: var(--t-0);
+}
+
+.layer-group__head .chev {
+  transition: transform 0.18s var(--ease);
+}
+
+.layer-group.is-collapsed .chev {
+  transform: rotate(-90deg);
+}
+
+.layer-group__count {
+  margin-left: auto;
+  font-size: 8.5px;
+  color: var(--t-3);
+}
+
+.layer-group.is-collapsed .layer-group__body {
+  display: none;
+}
+
+.layer-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 5px 9px 5px 11px;
+  background: none;
+  border: 0;
+  border-left: 2px solid transparent;
+  color: var(--t-1);
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.layer-row:hover {
+  background: rgba(255, 255, 255, 0.032);
+}
+
+.layer-row.is-on {
+  border-left-color: var(--info);
+  background: rgba(56, 189, 248, 0.06);
+  color: var(--t-0);
+}
+
+.layer-row__icon {
+  width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  color: var(--t-3);
+}
+
+.layer-row.is-on .layer-row__icon {
+  color: var(--info);
+}
+
+.layer-row__label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.layer-row__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layer-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--t-3);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.layer-row__status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.layer-row__info {
+  opacity: 0.4;
+  padding: 2px;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.layer-row__info:hover {
+  opacity: 1;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--t-3);
+  flex: 0 0 auto;
+}
+
+.dot--live {
+  background: var(--ok);
+  box-shadow: 0 0 5px rgba(74, 222, 128, 0.7);
+}
+.dot--loading {
+  background: var(--info);
+  animation: gev-pulse 1.1s ease-in-out infinite;
+}
+.dot--stale {
+  background: var(--warn);
+}
+.dot--error,
+.dot--blocked {
+  background: var(--crit);
+}
+.dot--config {
+  background: var(--amber);
+}
+.dot--demo {
+  background: var(--violet);
+}
+/* Every tone `statusTone()` can emit has an explicit rule below this line, so
+   no state renders as an accidental fall-through to the base dot colour. */
+.dot--idle {
+  background: var(--t-3);
+}
+.dot--off {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--t-3);
+}
+.dot--empty {
+  background: var(--t-2);
+}
+
+@keyframes gev-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ----------------------------- context panel ---------------------------- */
+
+#panel-context {
+  top: calc(var(--top-h) + 8px);
+  right: 8px;
+  width: var(--ctx-w);
+  max-height: calc(100% - var(--top-h) - var(--tele-h) - 16px);
+}
+
+.ctx-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px;
+  border-bottom: 1px solid var(--l-0);
+}
+
+.ctx-hero__title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--t-0);
+}
+
+.ctx-hero__sub {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--t-3);
+  letter-spacing: 0.05em;
+}
+
+.ctx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 9px;
+  border-bottom: 1px solid var(--l-0);
+}
+
+.ctx-empty {
+  padding: 18px 12px;
+  text-align: center;
+  color: var(--t-3);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+/* ------------------------------ telemetry ------------------------------- */
+
+.gev-tele {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--tele-h);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 9px;
+  background: linear-gradient(0deg, rgba(8, 11, 15, 0.96), rgba(8, 11, 15, 0.8));
+  border-top: 1px solid var(--l-1);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--t-2);
+  overflow: hidden;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+.gev-tele__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.gev-tele__item b {
+  color: var(--t-0);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.gev-tele__sep {
+  width: 1px;
+  height: 12px;
+  background: var(--l-1);
+  flex: 0 0 auto;
+}
+
+.gev-tele__spacer {
+  flex: 1 1 auto;
+}
+
+/* -------------------------------- HUD ---------------------------------- */
+
+.gev-hud {
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(120, 235, 180, 0.82);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+}
+
+.gev-hud--tl {
+  top: calc(var(--top-h) + 12px);
+  right: calc(var(--ctx-w) + 18px);
+  text-align: right;
+  line-height: 1.55;
+}
+
+.gev-hud--tc {
+  top: calc(var(--top-h) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.gev-hud__cross {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.gev-hud__cross::before,
+.gev-hud__cross::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  opacity: 0.75;
+}
+
+.gev-hud__cross::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.gev-hud__cross::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.gev-hud.is-hidden {
+  display: none;
+}
+
+/* ------------------------------ tool clusters --------------------------- */
+
+.gev-cluster {
+  position: absolute;
+  z-index: 22;
+  display: flex;
+  gap: 5px;
+}
+
+.gev-cluster--nav {
+  right: 8px;
+  bottom: calc(var(--tele-h) + 8px);
+  flex-direction: column;
+}
+
+.gev-cluster--view {
+  left: 8px;
+  bottom: calc(var(--tele-h) + 8px);
+}
+
+/* ------------------------------- overlays ------------------------------- */
+
+.gev-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: rgba(3, 5, 8, 0.66);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+
+.gev-modal-backdrop.is-hidden {
+  display: none;
+}
+
+.gev-modal {
+  width: min(680px, 100%);
+  max-height: min(80vh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--s-1), var(--s-0));
+  border: 1px solid var(--l-2);
+  border-radius: var(--r-3);
+  box-shadow: 0 30px 90px -20px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+.gev-modal--wide {
+  width: min(900px, 100%);
+}
+
+.gev-modal__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--l-1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.gev-modal__title {
+  flex: 1 1 auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t-0);
+}
+
+.gev-modal__body {
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+}
+
+/* -------------------------------- toasts -------------------------------- */
+
+.gev-toasts {
+  position: absolute;
+  z-index: 55;
+  left: 50%;
+  bottom: calc(var(--tele-h) + 14px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  pointer-events: none;
+  width: min(520px, calc(100% - 24px));
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  background: rgba(12, 17, 22, 0.96);
+  border: 1px solid var(--l-2);
+  border-left: 2px solid var(--info);
+  border-radius: var(--r-1);
+  font-size: 11.5px;
+  color: var(--t-0);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.8);
+  animation: gev-toast-in 0.24s var(--ease);
+  max-width: 100%;
+}
+
+.toast--warn {
+  border-left-color: var(--warn);
+}
+.toast--error {
+  border-left-color: var(--crit);
+}
+.toast--ok {
+  border-left-color: var(--ok);
+}
+
+.toast.is-out {
+  animation: gev-toast-out 0.22s var(--ease) forwards;
+}
+
+@keyframes gev-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes gev-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ------------------------------- detection ------------------------------ */
+
+#gev-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+}
+
+/* ------------------------------ radio player --------------------------- */
+
+.radio-now {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 9px;
+  border-bottom: 1px solid var(--l-0);
+  background: rgba(56, 189, 248, 0.04);
+}
+
+.radio-now__meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.radio-now__name {
+  font-size: 11.5px;
+  color: var(--t-0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radio-now__sub {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--t-3);
+}
+
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 12px;
+}
+
+.eq span {
+  width: 2px;
+  background: var(--ok);
+  animation: gev-eq 0.9s ease-in-out infinite;
+}
+
+.eq span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.eq span:nth-child(3) {
+  animation-delay: 0.36s;
+}
+.eq span:nth-child(4) {
+  animation-delay: 0.54s;
+}
+
+@keyframes gev-eq {
+  0%,
+  100% {
+    height: 20%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+/* ------------------------------ layer list ----------------------------- */
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 9px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--l-0);
+  color: var(--t-1);
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.result-row:hover {
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--t-0);
+}
+
+.result-row.is-selected {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--t-0);
+}
+
+.result-row__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.result-row__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-row__sub {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  color: var(--t-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ------------------------------- slider row ---------------------------- */
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.slider-row > .input-range {
+  grid-column: 1 / -1;
+}
+
+.slider-val {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--t-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chip {
+  padding: 3px 8px;
+  border: 1px solid var(--l-1);
+  border-radius: 20px;
+  background: var(--s-1);
+  color: var(--t-2);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--l-2);
+  color: var(--t-0);
+}
+
+.chip.is-on {
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #cdefff;
+}
+
+/* ---------------------------- camera tour / rec ------------------------ */
+
+.gev-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--crit);
+}
+
+.gev-rec__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--crit);
+  animation: gev-pulse 1.2s ease-in-out infinite;
+}
+
+/* ---------------------------- mobile / narrow -------------------------- */
+
+.gev-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  background: rgba(3, 5, 8, 0.5);
+}
+
+.gev-scrim.is-hidden {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  :root {
+    --rail-w: 264px;
+    --ctx-w: 306px;
+  }
+}
+
+@media (max-width: 860px) {
+  :root {
+    --rail-w: min(84vw, 300px);
+    --ctx-w: min(88vw, 330px);
+  }
+
+  .gev-topbar__sub,
+  .gev-topbar__clock small {
+    display: none;
+  }
+
+  #panel-layers,
+  #panel-context {
+    top: calc(var(--top-h) + 6px);
+    bottom: calc(var(--tele-h) + 6px);
+    max-height: none;
+  }
+
+  .gev-hud--tl {
+    right: 12px;
+  }
+
+  .gev-cluster--nav {
+    bottom: calc(var(--tele-h) + 6px);
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --top-h: 42px;
+  }
+
+  .gev-topbar__name {
+    letter-spacing: 0.14em;
+    font-size: 9.5px;
+  }
+
+  .gev-tele {
+    font-size: 8.5px;
+    gap: 7px;
+  }
+
+  .gev-tele__hide-sm {
+    display: none;
+  }
+
+  #gev-credits {
+    max-width: 62vw;
+    font-size: 8.5px;
+  }
+}
+
+/* ------------------------- clean / presentation mode -------------------- */
+
+.gev-app.is-clean .gev-topbar,
+.gev-app.is-clean .gev-tele,
+.gev-app.is-clean .gev-cluster,
+.gev-app.is-clean .gev-hud,
+.gev-app.is-clean #gev-overlay,
+.gev-app.is-clean .panel {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+
+.gev-app.is-clean #gev-credits {
+  opacity: 0.35;
+}

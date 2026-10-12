@@ -1,0 +1,60 @@
+MIT License
+
+Copyright (c) 2026 God's Eye View contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+INDEPENDENT IMPLEMENTATION
+
+This is an independent community implementation, inspired by the project
+"God's Eye View" by Bilawal Sidhu (https://github.com/bilawalsidhu/gods-eye-view,
+MIT License). It is not affiliated with, endorsed by, or maintained by the
+original author, and it shares no source code with that project. The original
+project's MIT license and copyright notice are preserved in
+THIRD_PARTY_NOTICES.md in accordance with its terms.
+
+---
+
+NOTE ON THIRD-PARTY DATA — THE MIT LICENSE ABOVE COVERS THE SOURCE CODE ONLY.
+
+This repository bundles **no datasets**. Every record shown on the globe is
+fetched at runtime from a third-party provider and remains subject to that
+provider's own licence and terms of use. The MIT grant does not extend to any
+of it.
+
+Per-source licences, attribution strings and usage limits are listed in
+DATA_SOURCES.md and are surfaced in the running application's Attribution
+panel. If you fork this project, review those terms before redistributing or
+using it commercially — several providers restrict commercial use or require
+you to supply your own credentials.
+
+Two deliberate omissions, made because their terms do not fit a permissively
+licensed project:
+
+  - TeleGeography's submarine cable map is CC BY-NC-SA 3.0 (NonCommercial).
+    It is not bundled and not fetched. Submarine cables are therefore absent
+    from this project by design.
+  - No imagery, video or 3D model from any third-party source is bundled.
+
+Not authoritative. Data shown here comes from public feeds of varying latency
+and accuracy, some of which are advisory products published on a delay. This
+tool is for situational awareness and curiosity. It is not suitable for
+navigation, emergency response, or any safety-critical decision.

@@ -1,0 +1,45 @@
+{
+  "name": "gods-eye-view",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An independent, static-hostable real-time 3D Earth intelligence console built on CesiumJS. Live satellites, earthquakes, weather radar, cyclones, radio, traffic cameras, infrastructure and more — no backend required.",
+  "type": "module",
+  "license": "MIT",
+  "author": "MeYashverma",
+  "homepage": "https://github.com/MeYashverma/gods-eye-view#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MeYashverma/gods-eye-view.git"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/check-build.mjs",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.mjs",
+    "test:watch": "node --test --watch tests/",
+    "check": "npm run test && npm run build && npm run check:build",
+    "check:build": "node scripts/check-build.mjs"
+  },
+  "dependencies": {
+    "cesium": "^1.146.0",
+    "lucide": "^1.55.0",
+    "satellite.js": "^5.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.7"
+  },
+  "keywords": [
+    "cesium",
+    "3d-globe",
+    "geospatial",
+    "osint",
+    "github-pages",
+    "satellites",
+    "earthquakes",
+    "weather-radar",
+    "visualization"
+  ]
+}
