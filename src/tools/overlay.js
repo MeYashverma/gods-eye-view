@@ -16,6 +16,17 @@ export const OVERLAY_MODES = Object.freeze({
 });
 
 export function createOverlay({ canvas, viewer, layers, selection }) {
+  // The canvas comes from `document.getElementById('gev-overlay')`, which the
+  // shell used to create *after* this factory ran — so a missing canvas used to
+  // be a hard crash (`getContext` of null) that blanked the whole console.
+  // Degraded beats dead: the globe, layers and UI are all still usable without
+  // the detection brackets, so hand back a no-op overlay that satisfies the
+  // same contract and say why on the console.
+  if (!canvas) {
+    console.warn('[overlay] no #gev-overlay canvas in the document — detection brackets are disabled.');
+    return createInertOverlay();
+  }
+
   const ctx = canvas.getContext('2d');
   let mode = OVERLAY_MODES.SELECTED;
   let showBrackets = true;
@@ -126,6 +137,34 @@ export function createOverlay({ canvas, viewer, layers, selection }) {
     },
     dispose() {
       this.stop();
+    },
+  };
+}
+
+/**
+ * A stand-in that satisfies `createOverlay`'s contract without a canvas, so a
+ * missing `#gev-overlay` degrades to "no brackets" instead of a boot failure.
+ * Every member of the real overlay's surface is present; the draw loop is
+ * simply never scheduled.
+ */
+function createInertOverlay() {
+  let mode = OVERLAY_MODES.SELECTED;
+  return {
+    start() {},
+    stop() {},
+    setMode(next) {
+      mode = next;
+    },
+    get mode() {
+      return mode;
+    },
+    setBrackets() {},
+    setAccent() {},
+    setMaxBoxes() {},
+    dispose() {},
+    /** Lets the UI surface the degraded state rather than fail silently. */
+    get isInert() {
+      return true;
     },
   };
 }

@@ -18,6 +18,12 @@ jobs:
   build:
     name: Test and build
     runs-on: ubuntu-latest
+    # `contents: read` is inherited from the workflow above and is not enough
+    # for the `Configure Pages` step below: enabling a Pages site is a write to
+    # the Pages settings API, which needs `pages: write` on this job.
+    permissions:
+      contents: read
+      pages: write
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -50,8 +56,13 @@ jobs:
         env:
           REPO_NAME: ${{ github.repository }}
 
+      # `enablement: true` creates the Pages site on first run instead of
+      # failing with a 404, so a fork or a fresh repo needs no manual
+      # Settings -> Pages toggle. It is a no-op once the site exists.
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload the site artifact
         uses: actions/upload-pages-artifact@v3

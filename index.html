@@ -28,6 +28,17 @@
     <div id="app" class="gev-app">
       <div id="cesium-container" class="gev-globe" aria-label="Interactive 3D Earth globe" role="application"></div>
 
+      <!--
+        Static contract with src/main.js. Both of these are read by id during
+        boot — the credit container before `new Cesium.Viewer()` and the overlay
+        canvas before `createShell()` builds the console — so they must exist in
+        the document rather than being created by the shell. Stacking is by
+        z-index (#gev-overlay 12, #gev-credits 6, .gev-boot 60), not by DOM
+        order, so declaring them here cannot reorder the UI.
+      -->
+      <canvas id="gev-overlay" aria-hidden="true"></canvas>
+      <div id="gev-credits" role="complementary" aria-label="Map data attribution"></div>
+
       <noscript>
         <div class="gev-noscript">
           <h1>God's Eye View</h1>

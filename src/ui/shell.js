@@ -141,11 +141,19 @@ export function createShell({ root, events }) {
 
   /* ------------------------------ overlay ------------------------------- */
 
-  const overlay = el('canvas', { id: 'gev-overlay' });
-  const credits = el('div', { id: 'gev-credits' });
+  // `index.html` declares both of these because `src/main.js` looks them up by
+  // id before the shell is constructed. Adopt the declared elements instead of
+  // minting a second node with the same id — two `#gev-overlay` nodes would
+  // leave the app drawing to an element that is not in the document. The
+  // fallback keeps `createShell()` usable against a bare root (tests, an
+  // offscreen harness) where the document contract does not apply.
+  const overlay = root.querySelector('#gev-overlay') ?? el('canvas', { id: 'gev-overlay' });
+  const credits = root.querySelector('#gev-credits') ?? el('div', { id: 'gev-credits' });
   const toasts = el('div', { class: 'gev-toasts', role: 'status', 'aria-live': 'polite' });
   const scrim = el('div', { class: 'gev-scrim is-hidden' });
 
+  // Appending an already-attached node relocates it, so the adopted elements
+  // land in exactly the order the shell used to create them in.
   app.append(topbar, overlay, hud, navCluster, viewCluster, credits, telemetry, toasts, scrim);
 
   return {
