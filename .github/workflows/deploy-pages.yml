@@ -18,12 +18,17 @@ jobs:
   build:
     name: Test and build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Needed only so configure-pages can turn Pages on for a repository that
+      # does not have it enabled yet. Nothing else in this job touches Pages.
+      pages: write
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -51,10 +56,14 @@ jobs:
           REPO_NAME: ${{ github.repository }}
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
+        with:
+          # Turns Pages on with the GitHub Actions source if the repository has
+          # not been configured yet, so a fork needs no manual step.
+          enablement: true
 
       - name: Upload the site artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -71,4 +80,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
